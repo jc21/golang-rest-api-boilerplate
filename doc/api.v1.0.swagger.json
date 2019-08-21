@@ -1,0 +1,111 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Boilerplate API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Development"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "operationId": "health",
+                "summary": "Returns the API health status",
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Health"
+                                },
+                                "examples": {
+                                    "healthy": {
+                                        "value": {
+                                            "result": {
+                                                "commit": "c448254",
+                                                "healthy": true
+                                            }
+                                        }
+                                    },
+                                    "unhealthy": {
+                                        "value": {
+                                            "result": {
+                                                "commit": "c448254",
+                                                "healthy": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Health": {
+                "type": "object",
+                "description": "Health object",
+                "additionalProperties": false,
+                "required": [
+                    "result"
+                ],
+                "properties": {
+                    "result": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "commit",
+                            "healthy",
+                            "checks"
+                        ],
+                        "properties": {
+                            "commit": {
+                                "type": "string",
+                                "description": "Commit hash",
+                                "example": "88cb49b8f8d4d9ce7c4825aa13410b849bf99878",
+                                "minLength": 8
+                            },
+                            "healthy": {
+                                "type": "boolean",
+                                "description": "Healthy?",
+                                "example": true
+                            }
+                        }
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message"
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "description": "Error object",
+                "additionalProperties": false,
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "Error code",
+                        "minimum": 0
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message"
+                    }
+                }
+            }
+        }
+    }
+}

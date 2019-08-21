@@ -1,13 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"boilerplate/pkg/api"
+	"boilerplate/pkg/config"
+	"boilerplate/pkg/logger"
 )
 
 var commit string
 
 func main() {
-	log.SetFlags(0) // this removes timestamp prefixes from logs
-	fmt.Printf("Hello world: %v\n", commit)
+	config.Init(commit)
+	logger.Init(config.Env.Log.Level)
+	logger.Info("version: %v", commit)
+	logger.Debug("config: %+v", config.Env)
+
+	api.StartServer()
 }

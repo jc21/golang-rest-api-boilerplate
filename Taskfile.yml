@@ -17,14 +17,28 @@ tasks:
       - cmd: ./bin/server
         ignore_error: true
         silent: true
+    env:
+      HTTP_PORT: 3000
+      LOG_LEVEL: debug
 
   build:
     desc: Build the provider
     cmds:
       - cmd: echo -e "==> Building..."
         silent: true
+      - cmd: rm -f bin/*
+        silent: true
       - cmd: go build -ldflags="-X main.commit={{.GIT_COMMIT}}" -o bin/server ./cmd/server/main.go
         silent: true
     vars:
       GIT_COMMIT:
         sh: git log -n 1 --format=%h
+    env:
+      GO111MODULE: on
+      CGO_ENABLED: 0
+
+  lint:
+    desc: Linting
+    cmds:
+      - cmd: bash lint.sh
+        silent: true
