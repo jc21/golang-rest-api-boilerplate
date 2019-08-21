@@ -1,0 +1,30 @@
+version: '2'
+
+tasks:
+  default:
+    cmds:
+      - task: run
+
+  run:
+    desc: Build and run
+    sources:
+      - pkg/**/*.go
+      - cmd/**/*.go
+    cmds:
+      - task: build
+      - cmd: echo -e "==> Running..."
+        silent: true
+      - cmd: ./bin/server
+        ignore_error: true
+        silent: true
+
+  build:
+    desc: Build the provider
+    cmds:
+      - cmd: echo -e "==> Building..."
+        silent: true
+      - cmd: go build -ldflags="-X main.commit={{.GIT_COMMIT}}" -o bin/server ./cmd/server/main.go
+        silent: true
+    vars:
+      GIT_COMMIT:
+        sh: git log -n 1 --format=%h
