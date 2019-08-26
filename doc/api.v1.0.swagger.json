@@ -46,6 +46,128 @@
                     }
                 }
             }
+        },
+        "/tokens": {
+            "post": {
+                "operationId": "requestToken",
+                "summary": "Request a new access token from credentials",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "credentials",
+                        "description": "Credentials Payload",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "identity",
+                                "secret"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                                "identity": {
+                                    "type": "string",
+                                    "minLength": 1
+                                },
+                                "secret": {
+                                    "type": "string",
+                                    "minLength": 1
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "value": {
+                                            "result": {
+                                                "expires": 1566540510,
+                                                "token": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "operationId": "refreshToken",
+                "summary": "Refresh your access token",
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "value": {
+                                            "result": {
+                                                "expires": 1566540510,
+                                                "token": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{userID}": {
+            "get": {
+                "operationId": "getUser",
+                "summary": "Get a user object by ID or 'me'",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userID",
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                {
+                                    "type": "string",
+                                    "pattern": "^me$"
+                                }
+                            ]
+                        },
+                        "required": true,
+                        "description": "Numeric ID of the user or 'me' to get yourself",
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "success": {
+                                        "value": {
+                                            "result": "You got user: 123"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -83,6 +205,37 @@
                     "message": {
                         "type": "string",
                         "description": "Error message"
+                    }
+                }
+            },
+            "Token": {
+                "type": "object",
+                "description": "Token object",
+                "additionalProperties": false,
+                "required": [
+                    "result"
+                ],
+                "properties": {
+                    "result": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "expires",
+                            "token"
+                        ],
+                        "properties": {
+                            "expires": {
+                                "type": "number",
+                                "description": "Token Expiry Unix Time",
+                                "example": 1566540249,
+                                "minimum": 1
+                            },
+                            "token": {
+                                "type": "string",
+                                "description": "JWT Token",
+                                "example": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.ey...xaHKYr3Kk6MvkUjcC4"
+                            }
+                        }
                     }
                 }
             },
