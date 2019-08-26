@@ -35,7 +35,7 @@ func applyPublicMiddleware(router chi.Router) chi.Router {
 		logger.Error(fmt.Sprintf("PublicKeyParseError: %v", publicKeyParseErr))
 	}
 
-	tokenAuth := jwtauth.New("RS512", privateKey, publicKey)
+	tokenAuth := jwtauth.New("RS256", privateKey, publicKey)
 	router.Use(jwtauth.Verifier(tokenAuth))
 
 	return router
